@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>生日快乐 - 小柚的特别祝福</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      overflow: hidden;
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+      background: linear-gradient(135deg, #87CEEB, #5D8AA8);
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      perspective: 1000px;
+      padding: 20px;
+    }
+
+    .balloon {
+      position: absolute;
+      width: 50px;
+      height: 60px;
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    .balloon:before {
+      content: "";
+      position: absolute;
+      width: 2px;
+      height: 70px;
+      background: rgba(255, 255, 255, 0.7);
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* 星星装饰 */
+    .star {
+      position: absolute;
+      font-size: 24px;
+      color: gold;
+      z-index: 1;
+      animation: twinkle 3s infinite alternate;
+    }
+
+    /* 飘带装饰 */
+    .ribbon {
+      position: absolute;
+      height: 30px;
+      background: linear-gradient(45deg, #FFD700, #FFA500, #FF6347);
+      transform-origin: top left;
+      z-index: 1;
+    }
+
+    /* 卡片容器 */
+    .card-container {
+      width: 100%;
+      max-width: 500px;
+      height: 600px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 1s ease;
+      cursor: pointer;
+    }
+
+    .card-container.flipped {
+      transform: rotateY(180deg);
+    }
+
+    /* 卡片正反面 */
+    .card-front,
+    .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      overflow: hidden;
+    }
+
+    /* 卡片正面 */
+    .card-front {
+      background: linear-gradient(135deg, #ffffff, #f0f8ff);
+      color: #333;
+      text-align: center;
+    }
+
+    .card-front h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      color: #FF6B6B;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      animation: pulse 2s infinite;
+    }
+
+    .card-front .message {
+      font-size: 1.2rem;
+      margin: 20px 0;
+      color: #5D8AA8;
+      max-width: 80%;
+      line-height: 1.6;
+    }
+
+    .card-front .click-hint {
+      position: absolute;
+      bottom: 30px;
+      font-size: 1rem;
+      color: #87CEEB;
+      animation: bounce 2s infinite;
+    }
+
+    /* 卡片背面 */
+    .card-back {
+      background: linear-gradient(45deg, #87CEEB, #5D8AA8);
+      color: white;
+      transform: rotateY(180deg);
+      text-align: center;
+    }
+
+    .card-back h2 {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    /* 中间留空区域 */
+    .blank-space {
+      width: 90%;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border: 3px dashed rgba(135, 206, 235, 0.7);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .blank-space p {
+      color: #5D8AA8;
+      font-size: 1.2rem;
+      line-height: 1.6;
+    }
+
+    .signature {
+      margin-top: 30px;
+      font-size: 1.5rem;
+      font-style: italic;
+      color: white;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    @keyframes twinkle {
+      0% {
+        opacity: 0.3;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes ribbon {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(5deg);
+      }
+    }
+
+    @keyframes floating-upwards-balloon {
+      0% {
+        transform: translateY(0);
+      }
+
+      100% {
+        transform: translateY(calc(-100vh - 300px));
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div
+    class="balloon"
+    style="top: 10%; left: 10%; background: #FF6B6B;"
+  ></div>
+  <div
+    class="balloon"
+    style="top: 15%; left: 85%; background: #4ECDC4;"
+  ></div>
+  <div
+    class="balloon"
+    style="top: 80%; left: 15%; background: #FFD166;"
+  ></div>
+  <div
+    class="balloon"
+    style="top: 75%; left: 90%; background: #6A0572;"
+  ></div>
+
+  <div
+    class="star"
+    style="top: 20%; left: 20%;"
+  >★</div>
+  <div
+    class="star"
+    style="top: 30%; left: 75%;"
+  >★</div>
+  <div
+    class="star"
+    style="top: 80%; left: 25%;"
+  >★</div>
+  <div
+    class="star"
+    style="top: 70%; left: 80%;"
+  >★</div>
+
+  <div
+    class="ribbon"
+    style="top: 5%; left: 30%; width: 150px; transform: rotate(-20deg);"
+  ></div>
+  <div
+    class="ribbon"
+    style="top: 5%; left: 60%; width: 120px; transform: rotate(15deg);"
+  ></div>
+  <div
+    class="ribbon"
+    style="top: 90%; left: 20%; width: 180px; transform: rotate(10deg);"
+  ></div>
+  <div
+    class="ribbon"
+    style="top: 90%; left: 70%; width: 100px; transform: rotate(-15deg);"
+  ></div>
+
+  <!-- 贺卡容器 -->
+  <div
+    class="card-container"
+    id="card"
+  >
+    <!-- 卡片正面 -->
+    <div class="card-front">
+      <h1>生日快乐!</h1>
+      <div class="message">
+        亲爱的，在这个特别的日子里，我想送上最真挚的祝福。<br>
+        点击打开贺卡，查看我为你准备的惊喜！
+      </div>
+      <div class="click-hint">点击打开贺卡 →</div>
+    </div>
+
+    <!-- 卡片背面 -->
+    <div class="card-back">
+      <h2>给最爱的你</h2>
+
+      <!-- 中间留空区域 -->
+      <div class="blank-space">
+        <p>亲爱的，祝你生日快乐！<br>
+          愿你的每一天都充满阳光与欢笑，<br>
+          愿你的每个梦想都能实现。<br>
+          我会一直陪伴在你身边！</p>
+      </div>
+
+      <div class="signature">爱你的小柚 ❤️</div>
+    </div>
+  </div>
+
+  <script>
+    // 气球动画
+    document.querySelectorAll('.balloon').forEach(balloon => {
+      balloon.style.animation = `float ${3 + Math.random() * 3}s ease-in-out infinite`;
+      balloon.style.animationDelay = `${Math.random() * 2}s`;
+    });
+
+    // 彩带动画
+    document.querySelectorAll('.ribbon').forEach(ribbon => {
+      ribbon.style.animation = `ribbon ${4 + Math.random() * 4}s ease-in-out infinite alternate`;
+      ribbon.style.animationDelay = `${Math.random() * 2}s`;
+    });
+
+    // 卡片翻转效果
+    const card = document.getElementById('card');
+    card.addEventListener('click', () => {
+      card.classList.toggle('flipped');
+
+      // 翻转后添加更多动画
+      if (card.classList.contains('flipped')) {
+        setTimeout(() => {
+          document.querySelectorAll('.star').forEach(star => {
+            star.style.animation = 'twinkle 1s infinite alternate';
+          });
+        }, 500);
+      }
+    });
+
+    function createBalloons() {
+      const colors = ['#FF6B6B', '#4ECDC4', '#FFD166', '#6A0572', '#1A535C'];
+      const container = document.body;
+
+      for (let i = 0; i < 2; i++) {
+        const balloon = document.createElement('div');
+        balloon.className = 'balloon';
+        balloon.style.left = `${5 + Math.random() * 90}%`;
+        balloon.style.top = `${100 + Math.random() * 20}%`;
+        balloon.style.background = colors[Math.floor(Math.random() * colors.length)];
+        balloon.style.animation = `floating-upwards-balloon ${10 + Math.random() * 4}s linear forwards`;
+
+        container.appendChild(balloon);
+
+        // 移除超出屏幕的气球
+        setTimeout(() => {
+          balloon.remove();
+        }, 15000);
+      }
+    }
+
+    // 持续添加气球
+    function createBalloonsConstantly() {
+      createBalloons();
+      setTimeout(createBalloonsConstantly, 2000);
+    }
+
+    createBalloonsConstantly();
+  </script>
+</body>
+
+</html>

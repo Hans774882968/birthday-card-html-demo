@@ -1,3 +1,5 @@
+[TOC]
+
 ## 引言
 
 一开始只是给npy展示一下不用电脑，只用手机，就能当场做出一张有动画效果的、活泼灵动的生日贺卡。
@@ -8,7 +10,7 @@ Prompt：
 > 1. 贺卡的中间部分需留空。
 > 2. 贺卡的主题色为天蓝色。
 > 3. 页面设计活泼灵动，有动画。
->   技术栈：HTML+CSS3+JavaScript。不要有任何额外依赖。你应当输出单个html文件。
+>     技术栈：HTML+CSS3+JavaScript。不要有任何额外依赖。你应当输出单个html文件。
 
 给JS生成的气球添加从下往上飘的动画的Prompt：
 
@@ -73,4 +75,41 @@ body {
 
 ## 气球只在贺卡的蓝色背景部分出现
 
-主要是需要控制`balloon.style.left`，初始代码设置的值为`balloon.style.left = `${5 + Math.random() * 90}%`;`。TODO
+主要是需要控制`balloon.style.left`，初始代码设置的值为`balloon.style.left = `${5 + Math.random() * 90}%`;`。问DeepSeek得到的代码思路很简单，用`cardRect.left / viewportWidth`去算百分比，据此不难拿到左边界和右边界对应的百分比。
+
+DeepSeek生成的代码没考虑到页面宽度非常小的情况，我就手动处理了。代码如下：
+
+```js
+function getRandomPosition() {
+  const cardRect = cardElement.getBoundingClientRect();
+  const viewportWidth = window.innerWidth;
+  const cardLeftPercent = (cardRect.left / viewportWidth) * 100;
+  const cardRightPercent = (cardRect.right / viewportWidth) * 100;
+  const marginSafePercent = 5; // 安全边距百分比
+
+  // 随机选择左侧或右侧区域
+  const isLeftSide = Math.random() > 0.5;
+
+  if (isLeftSide) {
+    // 卡片左侧区域 (0% 到 卡片左边界-边距)
+    return Math.random() * Math.max(cardLeftPercent - marginSafePercent, 0);
+  }
+  const rightPartLeftMost = cardRightPercent + marginSafePercent;
+  // 卡片右侧区域 (卡片右边界+边距 到 95%)
+  if (rightPartLeftMost > 95) {
+    return 95;
+  }
+  return rightPartLeftMost + Math.random() * (95 - rightPartLeftMost);
+}
+
+// 调用
+balloon.style.left = `${getRandomPosition()}%`;
+```
+
+附：Prompt：
+
+> 大佬，你是一名专家前端工程师，擅长实现前端页面，请叫我hans7。以上代码已经实现了向上飘的气球。现在希望气球的balloon.style.left能够避开card-container，即随机范围限制在card-container的左边或右边。注意：只输出需要改动的代码。
+> 代码规范：
+> 1. 遵循最小改动原则，请勿修改与本次需求无关的代码。
+> 2. Don't Repeat Yourself。重复出现2次及以上的逻辑需封装为函数
+

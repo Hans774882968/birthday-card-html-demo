@@ -343,12 +343,12 @@
     });
 
     // 卡片翻转效果
-    const card = document.getElementById('card');
-    card.addEventListener('click', () => {
-      card.classList.toggle('flipped');
+    const cardElement = document.getElementById('card');
+    cardElement.addEventListener('click', () => {
+      cardElement.classList.toggle('flipped');
 
       // 翻转后添加更多动画
-      if (card.classList.contains('flipped')) {
+      if (cardElement.classList.contains('flipped')) {
         setTimeout(() => {
           document.querySelectorAll('.star').forEach(star => {
             star.style.animation = 'twinkle 1s infinite alternate';
@@ -357,6 +357,28 @@
       }
     });
 
+    function getRandomPosition() {
+      const cardRect = cardElement.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const cardLeftPercent = (cardRect.left / viewportWidth) * 100;
+      const cardRightPercent = (cardRect.right / viewportWidth) * 100;
+      const marginSafePercent = 5; // 安全边距百分比
+
+      // 随机选择左侧或右侧区域
+      const isLeftSide = Math.random() > 0.5;
+
+      if (isLeftSide) {
+        // 卡片左侧区域 (0% 到 卡片左边界-边距)
+        return Math.random() * Math.max(cardLeftPercent - marginSafePercent, 0);
+      }
+      const rightPartLeftMost = cardRightPercent + marginSafePercent;
+      // 卡片右侧区域 (卡片右边界+边距 到 95%)
+      if (rightPartLeftMost > 95) {
+        return 95;
+      }
+      return rightPartLeftMost + Math.random() * (95 - rightPartLeftMost);
+    }
+
     function createBalloons() {
       const colors = ['#FF6B6B', '#4ECDC4', '#FFD166', '#6A0572', '#1A535C'];
       const container = document.body;
@@ -364,7 +386,7 @@
       for (let i = 0; i < 2; i++) {
         const balloon = document.createElement('div');
         balloon.className = 'balloon';
-        balloon.style.left = `${5 + Math.random() * 90}%`;
+        balloon.style.left = `${getRandomPosition()}%`;
         balloon.style.top = `${100 + Math.random() * 20}%`;
         balloon.style.background = colors[Math.floor(Math.random() * colors.length)];
         balloon.style.animation = `floating-upwards-balloon ${10 + Math.random() * 4}s linear forwards`;
